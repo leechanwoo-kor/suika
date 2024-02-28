@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
   flame: ^1.16.0
+  flame_audio: ^2.10.0
+  flame_forge2d: ^0.17.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -53,6 +55,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/images/WATERMELON.png
+    - assets/images/MELON.png
+    - assets/images/APPLE.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
