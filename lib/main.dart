@@ -1,129 +1,103 @@
-import 'dart:async';
-import 'dart:math';
-import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
-import 'package:flame/events.dart';
-import 'package:flame/game.dart';
-import 'package:flame_forge2d/flame_forge2d.dart';
+import 'dart:developer' as dev;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(GameWidget(game: SuikaGame()));
-}
+import 'app_lifecycle/app_lifecycle.dart';
+import 'audio/audio_controller.dart';
+import 'player_progress/player_progress.dart';
+import 'router.dart';
+import 'settings/settings.dart';
+import 'style/palette.dart';
 
-final screenSize = Vector2(1500, 1700);
-
-class SuikaGame extends Forge2DGame {
-  SuikaGame()
-      : super(
-          zoom: 100,
-          gravity: Vector2(0, 30),
-          cameraComponent: CameraComponent.withFixedResolution(
-            width: screenSize.x,
-            height: screenSize.y,
-          ),
-        );
-  final Random _random = Random();
-
-  @override
-  Future<void> onLoad() async {
-    super.onLoad();
-
-    camera.backdrop.add(_Background(size: screenSize));
-
-    await images.loadAll(['WATERMELON.png', 'MELON.png', 'APPLE.png']);
-    FlameAudio.audioCache.loadAll(['pop.mp3', 'pop2.mp3']);
-    createFruit(Vector2(1000, 100));
-  }
-
-  void createFruit(Vector2 position) {
-    final fruitType =
-        FruitType.values[_random.nextInt(FruitType.values.length)];
-    final fruit = Fruit(
-      type: fruitType,
-      sprite: Sprite(images.fromCache('${fruitType.name}.png')),
-      position: position.clone(),
-      size: Vector2(50, 50),
-      gameRef: this,
+void main() async {
+  // Basic logging setup.
+  Logger.root.level = kDebugMode ? Level.FINE : Level.INFO;
+  Logger.root.onRecord.listen((record) {
+    dev.log(
+      record.message,
+      time: record.time,
+      level: record.level.value,
+      name: record.loggerName,
     );
-    add(fruit);
-    FlameAudio.play('pop.mp3');
-  }
+  });
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // Put game into full screen mode on mobile devices.
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // Lock the game to portrait mode on mobile devices.
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  runApp(MyApp());
 }
 
-class _Background extends PositionComponent {
-  _Background({super.size});
-  @override
-  void render(Canvas canvas) {
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y),
-        Paint()..color = Colors.transparent);
-  }
-}
-
-class EmotionBall extends BodyComponent {
-  final String assetURL;
-
-  EmotionBall({required this.assetURL});
-  double size = 1.6.w;
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-    final sprite = Sprite(game.images.fromCache(assetURL));
-    add(
-      SpriteComponent(
-        sprite: sprite,
-        size: Vector2(3.2.w, 3.2.w),
-        anchor: Anchor.center,
+  Widget build(BuildContext context) {
+    return AppLifecycleObserver(
+      child: MultiProvider(
+        // This is where you add objects that you want to have available
+        // throughout your game.
+        //
+        // Every widget in the game can access these objects by calling
+        // `context.watch()` or `context.read()`.
+        // See `lib/main_menu/main_menu_screen.dart` for example usage.
+        providers: [
+          Provider(create: (context) => SettingsController()),
+          Provider(create: (context) => Palette()),
+          ChangeNotifierProvider(create: (context) => PlayerProgress()),
+          // Set up audio.
+          ProxyProvider2<AppLifecycleStateNotifier, SettingsController,
+              AudioController>(
+            create: (context) => AudioController(),
+            update: (context, lifecycleNotifier, settings, audio) {
+              audio!.attachDependencies(lifecycleNotifier, settings);
+              return audio;
+            },
+            dispose: (context, audio) => audio.dispose(),
+            // Ensures that music starts immediately.
+            lazy: false,
+          ),
+        ],
+        child: Builder(builder: (context) {
+          final palette = context.watch<Palette>();
+
+          return MaterialApp.router(
+            title: 'My Flutter Game',
+            theme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: palette.darkPen,
+                background: palette.backgroundMain,
+              ),
+              textTheme: TextTheme(
+                bodyMedium: TextStyle(color: palette.ink),
+              ),
+              useMaterial3: true,
+            ).copyWith(
+              // Make buttons more fun.
+              filledButtonTheme: FilledButtonThemeData(
+                style: FilledButton.styleFrom(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            routeInformationProvider: router.routeInformationProvider,
+            routeInformationParser: router.routeInformationParser,
+            routerDelegate: router.routerDelegate,
+          );
+        }),
       ),
     );
   }
 }
-
-class Fruit extends SpriteComponent with DragCallbacks {
-  final SuikaGame gameRef;
-  FruitType type;
-  bool _isDragged = false;
-  Vector2? initialPosition;
-
-  Fruit({
-    required this.type,
-    required Sprite? sprite,
-    required Vector2? position,
-    required Vector2? size,
-    required this.gameRef,
-  }) : super(sprite: sprite, position: position, size: size) {
-    initialPosition = position?.clone();
-  }
-
-  @override
-  void onDragStart(DragStartEvent event) {
-    _isDragged = true;
-    FlameAudio.play('pop2.mp3');
-  }
-
-  @override
-  void onDragEnd(DragEndEvent event) {
-    _isDragged = false;
-    fall().then((_) => gameRef.createFruit(initialPosition!));
-  }
-
-  @override
-  void onDragUpdate(DragUpdateEvent event) {
-    if (_isDragged) {
-      // position += event.delta;
-      position.add(Vector2(event.delta.x, 0));
-    }
-  }
-
-  Future<void> fall() async {
-    final fallEffect = MoveEffect.to(
-      Vector2(position.x, gameRef.size.y - size.y),
-      EffectController(duration: 0.5, curve: Curves.easeOut),
-    );
-    await add(fallEffect);
-  }
-}
-
-enum FruitType { MELON, APPLE, WATERMELON }

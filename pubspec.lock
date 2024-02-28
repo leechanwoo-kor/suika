@@ -10,7 +10,7 @@ packages:
     source: hosted
     version: "2.11.0"
   audioplayers:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audioplayers
       sha256: c05c6147124cd63e725e861335a8b4d57300b80e6e92cea7c145c739223bbaef
@@ -145,30 +145,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  flame:
-    dependency: "direct main"
-    description:
-      name: flame
-      sha256: bb42a35fa5dabdea535daebe5b020e21a2fce8192b67b7e55cd30fed86d29f69
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.16.0"
-  flame_audio:
-    dependency: "direct main"
-    description:
-      name: flame_audio
-      sha256: "0551a01a0beb10bb54dc014c51b4b8ccd5ff69c7535fd60e7ce93fab00cdf5f4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.10.0"
-  flame_forge2d:
-    dependency: "direct main"
-    description:
-      name: flame_forge2d
-      sha256: "8cdce7f28bd101bd4ca36e0ea5b4f83c56e6d30b795ceac3bcb30fe4e84840bc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.17.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -192,14 +168,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  forge2d:
-    dependency: transitive
+  go_router:
+    dependency: "direct main"
     description:
-      name: forge2d
-      sha256: a16bee7a5bdf3538ef4a51ae9b6befb39872d3518b653fc7b8756ef49f7fcf96
+      name: go_router
+      sha256: "170c46e237d6eb0e6e9f0e8b3f56101e14fb64f787016e42edd74c39cf8b176a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.12.2"
+    version: "13.2.0"
   http:
     dependency: transitive
     description:
@@ -256,6 +232,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  logging:
+    dependency: "direct main"
+    description:
+      name: logging
+      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   matcher:
     dependency: transitive
     description:
@@ -280,14 +264,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
-  ordered_set:
+  nested:
     dependency: transitive
     description:
-      name: ordered_set
-      sha256: "3858c7d84619edfab87c3e367584648020903187edb70b52697646f4b2a93022"
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -360,6 +344,70 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  provider:
+    dependency: "direct main"
+    description:
+      name: provider
+      sha256: "9a96a0a19b594dbc5bf0f1f27d2bc67d5f95957359b461cd9feb44ed6ae75096"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.1"
+  shared_preferences:
+    dependency: "direct main"
+    description:
+      name: shared_preferences
+      sha256: "81429e4481e1ccfb51ede496e916348668fd0921627779233bd24cc3ff6abd02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
+  shared_preferences_android:
+    dependency: transitive
+    description:
+      name: shared_preferences_android
+      sha256: "8568a389334b6e83415b6aae55378e158fbc2314e074983362d20c562780fb06"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
+  shared_preferences_foundation:
+    dependency: transitive
+    description:
+      name: shared_preferences_foundation
+      sha256: "7708d83064f38060c7b39db12aefe449cb8cdc031d6062280087bc4cdb988f5c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.5"
+  shared_preferences_linux:
+    dependency: transitive
+    description:
+      name: shared_preferences_linux
+      sha256: "9f2cbcf46d4270ea8be39fa156d86379077c8a5228d9dfdb1164ae0bb93f1faa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
+  shared_preferences_platform_interface:
+    dependency: transitive
+    description:
+      name: shared_preferences_platform_interface
+      sha256: "22e2ecac9419b4246d7c22bfbbda589e3acf5c0351137d87dd2939d984d37c3b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
+  shared_preferences_web:
+    dependency: transitive
+    description:
+      name: shared_preferences_web
+      sha256: "9aee1089b36bd2aafe06582b7d7817fd317ef05fc30e6ba14bff247d0933042a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.0"
+  shared_preferences_windows:
+    dependency: transitive
+    description:
+      name: shared_preferences_windows
+      sha256: "841ad54f3c8381c480d0c9b508b89a34036f512482c407e6df7a9c4aa2ef8f59"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   sky_engine:
     dependency: transitive
     description: flutter
