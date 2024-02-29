@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../audio/audio_controller.dart';
+import '../audio/sounds.dart';
 import '../player_progress/player_progress.dart';
 import '../style/my_button.dart';
 import '../style/palette.dart';
@@ -21,6 +23,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<SettingsController>();
+    final audioController = context.watch<AudioController>();
     final palette = context.watch<Palette>();
 
     return Scaffold(
@@ -76,6 +79,7 @@ class SettingsScreen extends StatelessWidget {
         ),
         rectangularMenuArea: MyButton(
           onPressed: () {
+            audioController.playSfx(SfxType.buttonTap);
             GoRouter.of(context).pop();
           },
           child: const Text('Back'),

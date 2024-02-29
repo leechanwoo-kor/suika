@@ -21,6 +21,7 @@ class LevelSelectionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
     final playerProgress = context.watch<PlayerProgress>();
+    final audioController = context.watch<AudioController>();
 
     return Scaffold(
       backgroundColor: palette.backgroundLevelSelection,
@@ -62,6 +63,7 @@ class LevelSelectionScreen extends StatelessWidget {
         ),
         rectangularMenuArea: MyButton(
           onPressed: () {
+            audioController.playSfx(SfxType.buttonTap);
             GoRouter.of(context).go('/');
           },
           child: const Text('Back'),

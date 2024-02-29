@@ -5,6 +5,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:suika/suika_session/suika_session_screen.dart';
 
 import 'game_internals/score.dart';
 import 'level_selection/level_selection_screen.dart';
@@ -81,6 +82,11 @@ final router = GoRouter(
           path: 'settings',
           builder: (context, state) =>
               const SettingsScreen(key: Key('settings')),
+        ),
+        GoRoute(
+          path: 'suika',
+          builder: (context, state) =>
+              const SuikaSessionScreen(key: Key('suika session')),
         ),
       ],
     ),
