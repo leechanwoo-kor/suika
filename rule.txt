@@ -1,0 +1,11 @@
+Rules of Suika:
+
+In Suika, you drop fruit into a square. If the square fills up and any fruit sticks out the top, you lose. If the fruits bump into each other and fall out, you lose too. The game lets you drop fruits in a line and use physics to move them around. But if you land a fruit on the ground, it stays still; otherwise, the fruits can push each other.
+
+Tips for Beginners:
+
+- Line Up the Fruit: Place fruits from lowest to highest value. The highest one (the orange) goes on the far-right side.
+- Use Larger Fruit: As fruits get bigger, they’re easier to split. For example, if you have an apple, keep an orange next to it.
+- Corner Strategy: Keep the largest fruit in the bottom corner to avoid building a too-high stack.
+- Be Patient: Fruits are round and may roll. Wait until they stop moving before making your next move. This gives you time to think and plan.
+- These tips will help you understand and enjoy Suika and perform better in the game. Have fun!

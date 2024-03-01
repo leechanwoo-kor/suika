@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:suika/style/my_button.dart';
 import 'package:suika/style/palette.dart';
+import 'package:suika/suika_session/suika_widget.dart';
 
 import '../game_internals/level_state.dart';
 
@@ -58,7 +59,9 @@ class _SuikaSessionScreenState extends State<SuikaSessionScreen> {
                     ),
                   ),
                   const Spacer(),
-                  // Expanded(child: ,),
+                  Expanded(
+                    child: SuikaWidget(),
+                  ),
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
