@@ -12,6 +12,7 @@ class GroundComponent extends PositionComponent
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    debugMode = true;
     // Assuming the ground is at the bottom of the screen and spans the entire width
     size = Vector2(gameRef.size.x, 20);
     position = Vector2(0, gameRef.size.y - 20);

@@ -3,20 +3,17 @@ import 'package:flame/components.dart';
 import 'package:suika/components/ground_component.dart';
 
 class FruitComponent extends SpriteComponent with CollisionCallbacks {
-  bool isFalling = false;
+  final int fruitType;
+  FruitComponent(this.fruitType);
 
-  void startFalling() {
-    isFalling = true;
-  }
+  FruitState state = FruitState.idle;
 
   Vector2 velocity = Vector2(0, 0); // Initial velocity
-  final int fruitType;
-
-  FruitComponent(this.fruitType);
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    debugMode = true;
     // Load different sprites based on fruit type
     sprite = await Sprite.load('fruit$fruitType.png');
     anchor = Anchor.center;
@@ -25,8 +22,7 @@ class FruitComponent extends SpriteComponent with CollisionCallbacks {
 
   @override
   void update(double dt) {
-    super.update(dt);
-    if (isFalling) {
+    if (state == FruitState.falling) {
       velocity.y += 9.8;
       position.add(velocity * dt);
     }
@@ -37,12 +33,16 @@ class FruitComponent extends SpriteComponent with CollisionCallbacks {
     super.onCollision(intersectionPoints, other);
 
     if (other is GroundComponent) {
-      isFalling = false;
-      // Stop the fruit from falling or implement bounce logic
-      // velocity = Vector2.zero(); // Stops the fruit
-      velocity.y = -velocity.y * 0.5;
-      // For a simple bounce effect, you could reverse the y velocity, for example
-      // velocity = Vector2(velocity.x, -velocity.y * bounceFactor);
+      state = FruitState.idle;
+      position.y = other.position.y - size.y / 2;
+    }
+    if (other is FruitComponent) {
+      velocity = -velocity*0.5;
     }
   }
+}
+
+enum FruitState {
+  idle,
+  falling,
 }

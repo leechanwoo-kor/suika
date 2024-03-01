@@ -14,7 +14,7 @@ class VerticalLineComponent extends PositionComponent {
       required this.screenHeight,
       required this.canFollowMouse}) {
     paint = Paint()
-      ..color = Colors.yellow
+      ..color = Colors.white.withOpacity(0.5)
       ..strokeWidth = 5;
     size = Vector2(5, screenHeight);
   }

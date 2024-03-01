@@ -43,7 +43,7 @@ class SuikaGame extends FlameGame
     super.onMouseMove(event);
     if (canFollowMouse) {
       lastMousePosition = event.eventPosition.widget;
-      if (!fruit.isFalling) {
+      if (fruit.state == FruitState.idle) {
         // Update position only if the fruit isn't falling
         fruit.position.x = lastMousePosition!.x;
       }
@@ -83,7 +83,7 @@ class SuikaGame extends FlameGame
       super.onTapUp(info);
       canFollowMouse = false;
 
-      fruit.startFalling();
+      fruit.state = FruitState.falling;
 
       if (lastMousePosition != null) {
         Future.delayed(Duration(milliseconds: 750), () {
