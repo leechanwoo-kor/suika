@@ -7,9 +7,10 @@ import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 
 // Main game class
-class SuikaGame extends FlameGame with MouseMovementDetector, TapDetector {
+class SuikaGame extends FlameGame with HasCollisionDetection, MouseMovementDetector, TapDetector {
   final Random _random = Random();
   late FruitComponent fruit;
+  late VerticalLineComponent verticalLine;
   Vector2? lastMousePosition;
 
   @override
@@ -18,48 +19,39 @@ class SuikaGame extends FlameGame with MouseMovementDetector, TapDetector {
     final ground = GroundComponent();
     await add(ground);
 
-    spawnNewFruit(Vector2(size.x / 2, 20));
+    verticalLine =
+        VerticalLineComponent(screenWidth: size.x, screenHeight: size.y);
+    add(verticalLine);
+
+    spawnFruit(Vector2(size.x / 2, 20));
   }
 
   @override
   void onMouseMove(PointerHoverInfo event) {
     super.onMouseMove(event);
     lastMousePosition = event.eventPosition.widget;
-    if (!fruit.isFalling) { // Update position only if the fruit isn't falling
-      fruit.position.x = lastMousePosition!.x - fruit.size.x / 2;
+    if (!fruit.isFalling) {
+      // Update position only if the fruit isn't falling
+      fruit.position.x = lastMousePosition!.x;
     }
-    Vector2 newPosition = Vector2(event.eventPosition.widget.x - fruit.size.x / 2, fruit.position.y);
 
+    verticalLine.updatePosition(lastMousePosition!.x);
+
+    Vector2 newPosition =
+        Vector2(event.eventPosition.widget.x, fruit.position.y);
 
     if (newPosition.x < 0) {
       newPosition.x = 0;
     }
 
-    if (newPosition.x > size.x - fruit.size.x) {
-      newPosition.x = size.x - fruit.size.x;
+    if (newPosition.x > size.x) {
+      newPosition.x = size.x;
     }
 
     fruit.position = newPosition;
   }
 
-  void spawnFruit({bool spawnFirstFruit = false}) {
-    final fruitType = _random.nextInt(3);
-    final Vector2 initialPosition;
-    if (spawnFirstFruit) {
-      // Position the first fruit in the center of the screen
-      initialPosition = Vector2(size.x / 2, 100);
-    } else {
-      // Random position for subsequent fruits
-      initialPosition = Vector2(_random.nextDouble() * size.x, 0);
-    }
-
-    final fruitComponent = FruitComponent(fruitType)
-      ..position = initialPosition
-      ..size = Vector2.all(50.0);
-    add(fruitComponent);
-  }
-
-  void spawnNewFruit(Vector2 position) {
+  void spawnFruit(Vector2 position) {
     final fruitType = _random.nextInt(3);
     fruit = FruitComponent(fruitType)
       ..position = position
@@ -70,9 +62,11 @@ class SuikaGame extends FlameGame with MouseMovementDetector, TapDetector {
   @override
   void onTapUp(TapUpInfo info) {
     super.onTapUp(info);
+    
+    print('startFalling.');
     fruit.startFalling();
     if (lastMousePosition != null) {
-      spawnNewFruit(Vector2(lastMousePosition!.x - fruit.size.x / 2, 20));
+      spawnFruit(Vector2(lastMousePosition!.x, 20));
     }
   }
 }
@@ -110,7 +104,9 @@ class FruitComponent extends SpriteComponent with CollisionCallbacks {
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
+    
     if (other is GroundComponent) {
+      isFalling = false;
       // Stop the fruit from falling or implement bounce logic
       // velocity = Vector2.zero(); // Stops the fruit
       velocity.y = -velocity.y * 0.5;
@@ -120,9 +116,35 @@ class FruitComponent extends SpriteComponent with CollisionCallbacks {
   }
 }
 
+class VerticalLineComponent extends PositionComponent {
+  late final Paint paint; // Paint to define the line's color and style
+  final double screenWidth;
+  final double screenHeight;
+
+  VerticalLineComponent(
+      {required this.screenWidth, required this.screenHeight}) {
+    paint = Paint()
+      ..color = Colors.yellow // Choose the color of the line
+      ..strokeWidth = 5; // Set the line's width
+    size = Vector2(5, screenHeight); // Line width and game screen height
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    canvas.drawLine(Offset(0, 0), Offset(0, size.y), paint);
+  }
+
+  // Update the line's position to follow the mouse cursor
+  void updatePosition(double mouseX) {
+    position.x = mouseX - size.x / 2; // Center the line on the mouse x position
+  }
+}
+
 class GroundComponent extends PositionComponent
     with CollisionCallbacks, HasGameRef<SuikaGame> {
   late Paint paint;
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
