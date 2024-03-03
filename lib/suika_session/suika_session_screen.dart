@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:suika/style/my_button.dart';
 import 'package:suika/style/palette.dart';
 import 'package:suika/suika_session/suika_widget.dart';
 
@@ -43,36 +41,8 @@ class _SuikaSessionScreenState extends State<SuikaSessionScreen> {
         ignoring: _ignoreFlag,
         child: Scaffold(
           backgroundColor: palette.backgroundMain,
-          body: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkResponse(
-                      onTap: () => GoRouter.of(context).push('/settings'),
-                      child: Image.asset(
-                        'assets/images/settings.png',
-                        semanticLabel: 'Settings',
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  Expanded(
-                    child: SuikaWidget(),
-                  ),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MyButton(
-                      onPressed: () => GoRouter.of(context).go('/'),
-                      child: const Text('Back'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          body: Center(
+            child: SuikaWidget()
           ),
         ),
       ),
