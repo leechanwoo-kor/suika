@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +12,7 @@ class VerticalLineComponent extends Component {
         ..color = Colors.white70
         ..strokeWidth = 2
         ..style = PaintingStyle.stroke;
-        
+
       canvas.drawLine(start!.toOffset(), end!.toOffset(), paint);
     }
   }

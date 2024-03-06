@@ -11,7 +11,8 @@ class GroundComponent extends BodyComponent {
       type: BodyType.static,
     );
 
-    final shape = EdgeShape()..set(Vector2(-worldSize.x, -1), Vector2(worldSize.x, 0));
+    final shape = EdgeShape()
+      ..set(Vector2(-worldSize.x, -1), Vector2(worldSize.x, 0));
     final fixtureDef = FixtureDef(shape)..friction = 0.7;
 
     return world.createBody(bodyDef)..createFixture(fixtureDef);

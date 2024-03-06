@@ -5,8 +5,6 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
 import 'package:suika/suika_session/suika_init.dart';
 
-import 'components/ground_component.dart';
-import 'constants.dart';
 import 'controllers/generate_ball.dart';
 import 'suika_onload.dart';
 
@@ -32,22 +30,7 @@ class SuikaWorld extends Forge2DWorld
 
     await GameOnload(game).onLoad();
 
-    // camera.viewport = FixedResolutionViewport(resolution: screenSize);
-
-    // add(_Background(size: screenSize)
-    //     );
-    // add(totalBodies);
-
-    // camera.moveTo(worldSize / 2);
-
     await game.loadSprite('fruit0.png');
-
-    add(GroundComponent());
-
-    @override
-    void update(double dt) {
-      super.update(dt);
-    }
 
     @override
     Color backgroundColor() {
@@ -56,28 +39,13 @@ class SuikaWorld extends Forge2DWorld
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-  }
-
-  @override
   void onTapDown(TapDownEvent event) {
     GenerateBall(game).generateBall();
-    print('onTapDown');
-  }
-}
-
-class _Background extends PositionComponent {
-  _Background({super.size});
-
-  @override
-  void render(Canvas canvas) {
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), bluePaint);
   }
 }
 
 class SuikaWidget extends StatelessWidget {
-  const SuikaWidget({Key? key}) : super(key: key);
+  const SuikaWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

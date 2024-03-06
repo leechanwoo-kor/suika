@@ -1,8 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 
-import '../suika_widget.dart';
-
 class Ball extends BodyComponent {
   var debugMode = true;
   Vector2 position = Vector2.zero();

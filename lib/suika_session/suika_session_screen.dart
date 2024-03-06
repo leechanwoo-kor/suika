@@ -41,9 +41,7 @@ class _SuikaSessionScreenState extends State<SuikaSessionScreen> {
         ignoring: _ignoreFlag,
         child: Scaffold(
           backgroundColor: palette.backgroundMain,
-          body: Center(
-            child: SuikaWidget()
-          ),
+          body: Center(child: SuikaWidget()),
         ),
       ),
     );

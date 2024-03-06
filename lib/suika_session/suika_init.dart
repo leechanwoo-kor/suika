@@ -11,7 +11,7 @@ class SuikaInit {
   void init(Vector2 size) {
     // final boundaries = createBoundaries(gameRef.viewport);
     // boundaries.forEach(gameRef.add);
-    
+
     // gameRef.addContactCallback(BallWallContactCallback());
     // gameRef.addContactCallback(BallBallContactCallback());
   }

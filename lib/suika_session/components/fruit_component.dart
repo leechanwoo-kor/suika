@@ -1,9 +1,7 @@
 import 'dart:ui';
 
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
-import 'package:suika/suika_session/components/ground_component.dart';
 
 class FruitComponent extends BodyComponent with ContactCallbacks {
   final int fruitType;
