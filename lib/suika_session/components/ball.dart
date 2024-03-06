@@ -35,7 +35,9 @@ class Ball extends BodyComponent {
     );
 
     final shape = CircleShape()..radius = 5;
-    final fixtureDef = FixtureDef(shape);
+    final fixtureDef = FixtureDef(shape)
+      ..restitution = 0.1
+      ..density = 1.0;
 
     return world.createBody(bodyDef)..createFixture(fixtureDef);
   }

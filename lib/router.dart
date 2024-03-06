@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:suika/suika_session/suika_session_screen.dart';
 
 import 'game_internals/score.dart';
+import 'infinite_session/infinite_session_screen.dart';
 import 'level_selection/level_selection_screen.dart';
 import 'level_selection/levels.dart';
 import 'main_menu/main_menu_screen.dart';
@@ -87,6 +88,11 @@ final router = GoRouter(
           path: 'suika',
           builder: (context, state) =>
               const SuikaSessionScreen(key: Key('suika session')),
+        ),
+        GoRoute(
+          path: 'infinite',
+          builder: (context, state) =>
+              const InfiniteSessionScreen(key: Key('infinite session')),
         ),
       ],
     ),
