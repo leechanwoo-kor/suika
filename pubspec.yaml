@@ -4,16 +4,17 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ^3.0.0
+  sdk: '>=3.2.3 <4.0.0'
 
 dependencies:
+  flame: ^1.16.0
+  flame_forge2d: ^0.17.0
   flutter:
     sdk: flutter
   freezed_annotation: ^2.4.1
   get_it: ^7.6.7
   uuid: ^4.2.1
-  flame: ^1.16.0
-  flame_forge2d: ^0.17.0
+
   audioplayers: ^5.2.0
   cupertino_icons: ^1.0.6
   go_router: ^13.0.0
@@ -42,9 +43,14 @@ flutter:
       fonts:
         - asset: assets/fonts/Permanent_Marker/PermanentMarker-Regular.ttf
 
-# flutter_launcher_icons:
+flutter_launcher_icons:
+    web:
+      generate: true
+      image_path: "assets/images/watermelon.png"
+      background_color: "#FFFFFF"
+      theme_color: "#FFFFFF"
 #   android: true
 #   ios: true
 #   image_path: "assets/icons/icon.png"
 #   adaptive_icon_background: "#FFFFFF"
-#   adaptive_icon_foreground: "assets/icons/icon-adaptive-foreground.png"
+#   adaptive_icon_foreground: "assets/images/watermelon.png"
