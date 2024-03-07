@@ -171,11 +171,9 @@ class GameState {
   void onDragUpdate(int pointerId, DragUpdateInfo info) {
     final rect = camera.visibleWorldRect;
 
-    // ドラッグ位置を更新
     draggingPosition = screenToWorld(info.eventPosition.global);
     final draggingPositionX = _adjustDraggingPositionX(draggingPosition!.x);
 
-    // 線の位置を更新
     _predictLinePresenter.updateLine(
       worldToScreen(Vector2(draggingPositionX, rect.top)),
       worldToScreen(Vector2(draggingPositionX, rect.bottom)),
@@ -213,7 +211,7 @@ class GameState {
 
     Future.delayed(
       const Duration(
-        seconds: 1,
+        seconds: 2,
       ),
       () {
         draggingFruit = PhysicsFruit(
