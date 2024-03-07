@@ -211,7 +211,7 @@ class GameState {
 
     Future.delayed(
       const Duration(
-        seconds: 2,
+        seconds: 1,
       ),
       () {
         draggingFruit = PhysicsFruit(
