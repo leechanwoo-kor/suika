@@ -1,46 +1,121 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame/palette.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flutter/material.dart';
-import 'package:suika/suika_session/suika_init.dart';
+import 'package:get_it/get_it.dart';
 
-import 'controllers/generate_ball.dart';
-import 'suika_onload.dart';
+import 'domain/game_state.dart';
+import 'model/game_over_line.dart';
+import 'model/physics_fruit.dart';
+import 'model/prediction_line.dart';
+import 'model/score.dart';
+import 'presenter/dialog_presenter.dart';
+import 'presenter/game_over_panel_presenter.dart';
+import 'presenter/next_text_presenter.dart';
+import 'presenter/prediction_line_presenter.dart';
+import 'presenter/score_presenter.dart';
+import 'presenter/world_presenter.dart';
+import 'repository/game_repository.dart';
 
-final screenSize = Vector2(720, 1280);
-final worldSize = Vector2(7.2, 12.8);
+// final screenSize = Vector2(720, 1280);
+// final worldSize = Vector2(7.2, 12.8);
 
-class SuikaGame extends Forge2DGame {
-  SuikaGame()
-      : super(
-          zoom: 10,
-          gravity: Vector2(0, 9.8),
-          world: SuikaWorld(),
-        ) {
-    SuikaInit(this).init(screenSize);
-  }
-}
+class NextTextComponent extends TextComponent with HasGameRef<SuikaGame> {
+  NextTextComponent() : super(text: 'Next');
 
-class SuikaWorld extends Forge2DWorld
-    with TapCallbacks, HasGameReference<SuikaGame> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    position = Vector2(10, 15);
+  }
+}
 
-    await GameOnload(game).onLoad();
+class SuikaGame extends Forge2DGame with TapCallbacks, MultiTouchDragDetector {
+  SuikaGame() : super(gravity: Vector2(0, 69.8));
 
-    await game.loadSprite('fruit0.png');
+  final screenSize = Vector2(15, 20);
+  final center = Vector2(0, 7);
 
-    @override
-    Color backgroundColor() {
-      return Colors.red;
-    }
+  @override
+  Color backgroundColor() {
+    return const PaletteEntry(Color(0xFFE4CE9D)).color;
+  }
+
+  GameState get _gameState => GetIt.I.get<GameState>();
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    _gameState.onUpdate();
   }
 
   @override
-  void onTapDown(TapDownEvent event) {
-    GenerateBall(game).generateBall();
+  Future<void> onLoad() async {
+    super.onLoad();
+    await GetIt.I.reset();
+    final predictionLineComponent = PredictionLineComponent();
+    final scoreComponent = ScoreComponent();
+    final nextTextComponent = NextTextComponent();
+
+    final gameOverLine = GameOverLine(
+      worldToScreen(center - Vector2(screenSize.x + 1, screenSize.y)),
+      worldToScreen(center - Vector2(-screenSize.x - 1, screenSize.y)),
+    );
+    add(predictionLineComponent);
+    add(scoreComponent);
+    add(nextTextComponent);
+    add(gameOverLine);
+
+    GetIt.I.registerSingleton<GameRepository>(
+      GameRepository(),
+    );
+    GetIt.I.registerSingleton<GameState>(
+      GameState(
+        worldToScreen: worldToScreen,
+        screenToWorld: screenToWorld,
+        camera: camera,
+        add: add,
+      ),
+    );
+    GetIt.I.registerSingleton<WorldPresenter>(
+      WorldPresenter(world),
+    );
+    GetIt.I.registerSingleton<PredictionLinePresenter>(
+      PredictionLinePresenter(predictionLineComponent),
+    );
+    GetIt.I.registerSingleton<ScorePresenter>(
+      ScorePresenter(scoreComponent),
+    );
+
+    GetIt.I.registerSingleton<NextTextPresenter>(
+      NextTextPresenter(nextTextComponent),
+    );
+    GetIt.I.registerSingleton<GameOverPanelPresenter>(
+      GameOverPanelPresenter(),
+    );
+    GetIt.I.registerSingleton<DialogPresenter>(
+      DialogPresenter(),
+    );
+
+    _gameState.onLoad();
+
+    world.physicsWorld.setContactListener(
+      FruitsContactListener(),
+    );
+  }
+
+  @override
+  void onDragUpdate(int pointerId, DragUpdateInfo info) {
+    super.onDragUpdate(pointerId, info);
+    _gameState.onDragUpdate(pointerId, info);
+  }
+
+  @override
+  void onDragEnd(int pointerId, DragEndInfo info) {
+    super.onDragEnd(pointerId, info);
+    _gameState.isDragEnd = true;
   }
 }
 
@@ -52,5 +127,29 @@ class SuikaWidget extends StatelessWidget {
     return GameWidget(
       game: SuikaGame(),
     );
+  }
+}
+
+class FruitsContactListener extends ContactListener {
+  FruitsContactListener();
+  @override
+  void beginContact(Contact contact) {
+    final bodyA = contact.fixtureA.body;
+    final bodyB = contact.fixtureB.body;
+    final userDataA = bodyA.userData;
+    final userDataB = bodyB.userData;
+
+    if (userDataA is PhysicsFruit && userDataB is PhysicsFruit) {
+      if (userDataA.isStatic || userDataB.isStatic) {
+        return;
+      }
+      // When balls of the same size collide
+      if (userDataA.fruit.radius == userDataB.fruit.radius) {
+        GetIt.I.get<GameState>().onCollidedSameSizeFruits(
+              bodyA: bodyA,
+              bodyB: bodyB,
+            );
+      }
+    }
   }
 }
